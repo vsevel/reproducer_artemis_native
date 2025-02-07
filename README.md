@@ -1,5 +1,10 @@
 # code-with-quarkus
 
+this is showing the issue when using quarkus-artemis-jms in native and hornetq.
+the root of the problem is reflection missing for ActiveMQConnectionFactory
+
+here is the reproducer. check ReflectionConfig
+
 start hornetq
 ```
 docker network create my-network
