@@ -1,5 +1,6 @@
 package org.acme;
 
+import io.smallrye.common.annotation.Identifier;
 import jakarta.inject.Inject;
 import jakarta.jms.*;
 import jakarta.transaction.Transactional;
@@ -22,7 +23,12 @@ public class GreetingResource {
     final Queue queue;
 
     @Inject
+    @Identifier("<default>")
     ConnectionFactory connectionFactory;
+
+    @Inject
+    @Identifier("other")
+    ConnectionFactory connectionFactoryRA;
 
     GreetingResource(@ConfigProperty(name = "my-queue") String queueName) {
         queue = ActiveMQDestination.createQueue(queueName);
@@ -39,11 +45,21 @@ public class GreetingResource {
     @Produces(MediaType.TEXT_PLAIN)
     @Transactional
     public String send(@QueryParam("text") @DefaultValue("hello") String text,
-                       @QueryParam("count") @DefaultValue("1") int count) {
+                       @QueryParam("count") @DefaultValue("1") int count,
+                       @QueryParam("cf") @DefaultValue("<default>") String cfname) {
 
-        log.info("sending "+count+" message");
+        var cf = cfname.equals("ra") ? connectionFactoryRA : connectionFactory;
+
+        String out = send(text, count, cf);
+        if (out != null) return out;
+
+        return "OK: sent " + count + " message(s) with text " + text;
+    }
+
+    private String send(String text, int count, ConnectionFactory cf) {
+        log.info("sending "+ count +" message");
         try {
-            try (JMSContext context = connectionFactory.createContext()) {
+            try (JMSContext context = cf.createContext()) {
                 JMSProducer producer = context.createProducer();
                 for (int i = 0; i < count; i++) {
                     TextMessage message = context.createTextMessage(text + "_" + i);
@@ -56,7 +72,6 @@ public class GreetingResource {
             log.error("Error sending message", e);
             return "ERROR: " + out;
         }
-
-        return "OK: sent " + count + " message(s) with text " + text;
+        return null;
     }
 }

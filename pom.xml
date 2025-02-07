@@ -40,6 +40,11 @@
             <version>3.6.3</version>
         </dependency>
         <dependency>
+            <groupId>io.quarkiverse.artemis</groupId>
+            <artifactId>quarkus-artemis-jms-ra</artifactId>
+            <version>3.6.3</version>
+        </dependency>
+        <dependency>
             <groupId>org.apache.activemq</groupId>
             <artifactId>artemis-hqclient-protocol</artifactId>
             <version>2.39.0</version>
@@ -54,6 +59,10 @@
         <dependency>
             <groupId>io.quarkus</groupId>
             <artifactId>quarkus-arc</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>io.quarkus</groupId>
+            <artifactId>quarkus-narayana-jta</artifactId>
         </dependency>
         <dependency>
             <groupId>io.quarkus</groupId>

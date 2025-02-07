@@ -103,6 +103,14 @@ Caused by: ActiveMQConnectionTimedOutException[errorType=CONNECTION_TIMEDOUT mes
         ... 21 more
 ```
 
+test on hornetq with RA:
+``` 
+docker run --rm -p 8080:8080 --net my-network --name myapp vsevel/code-with-quarkus:jvm
+docker run --rm -p 8080:8080 --net my-network --name myapp vsevel/code-with-quarkus:native
+curl -X POST localhost:8080/hello/send?cf=ra
+# ==> OK: sent 1 message(s) with text hello
+```
+
 test with artemis:
 ```
 docker run -it --rm -p 61616:61616 -p 8161:8161 --net my-network --name artemis apache/activemq-artemis:latest-alpine
