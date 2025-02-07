@@ -102,3 +102,8 @@ Caused by: ActiveMQConnectionTimedOutException[errorType=CONNECTION_TIMEDOUT mes
         at org.apache.activemq.artemis.jms.client.ActiveMQConnectionFactory.createConnectionInternal(ActiveMQConnectionFactory.java:910)
         ... 21 more
 ```
+
+start artemis
+```
+docker run -it --rm -p 61616:61616 -p 8161:8161 --net my-network --name artemis apache/activemq-artemis:latest-alpine
+```
