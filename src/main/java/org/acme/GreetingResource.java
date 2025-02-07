@@ -6,6 +6,7 @@ import jakarta.transaction.Transactional;
 import jakarta.ws.rs.*;
 import jakarta.ws.rs.core.MediaType;
 import org.apache.activemq.artemis.jms.client.ActiveMQDestination;
+import org.eclipse.microprofile.config.inject.ConfigProperty;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -18,11 +19,14 @@ public class GreetingResource {
 
     Logger log = LoggerFactory.getLogger(GreetingResource.class);
 
-    final String QUEUE = "jms.queue.DLQ";
-    final Queue queue = ActiveMQDestination.createQueue(QUEUE);
+    final Queue queue;
 
     @Inject
     ConnectionFactory connectionFactory;
+
+    GreetingResource(@ConfigProperty(name = "my-queue") String queueName) {
+        queue = ActiveMQDestination.createQueue(queueName);
+    }
 
     @GET
     @Produces(MediaType.TEXT_PLAIN)
