@@ -103,7 +103,11 @@ Caused by: ActiveMQConnectionTimedOutException[errorType=CONNECTION_TIMEDOUT mes
         ... 21 more
 ```
 
-start artemis
+test with artemis:
 ```
 docker run -it --rm -p 61616:61616 -p 8161:8161 --net my-network --name artemis apache/activemq-artemis:latest-alpine
+docker run --rm -e QUARKUS_ARTEMIS_URL=tcp://artemis:61616 -e QUARKUS_ARTEMIS_USER=artemis -e QUARKUS_ARTEMIS_PASSWORD=artemis -e MY_QUEUE=DLQ -p 8080:8080 --net my-network --name myapp vsevel/code-with-quarkus:jvm
+docker run --rm -e QUARKUS_ARTEMIS_URL=tcp://artemis:61616 -e QUARKUS_ARTEMIS_USER=artemis -e QUARKUS_ARTEMIS_PASSWORD=artemis -e MY_QUEUE=DLQ -p 8080:8080 --net my-network --name myapp vsevel/code-with-quarkus:native
+curl -X POST localhost:8080/hello/send
+# ==> OK: sent 1 message(s) with text hello
 ```
